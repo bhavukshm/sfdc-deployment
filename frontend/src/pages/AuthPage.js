@@ -1,0 +1,64 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSalesforce } from '../context/SalesforceContext';
+import { authService } from '../services/authService';
+import './AuthPage.css';
+
+function AuthPage() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { isAuthenticated } = useSalesforce();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/metadata');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { authorizationUrl } = await authService.getAuthorizationUrl();
+      window.location.href = authorizationUrl;
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to initiate login');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Salesforce DevOps Platform</h2>
+        <p className="auth-description">
+          Deploy, compare, and manage your Salesforce metadata with confidence.
+        </p>
+
+        {error && <div className="error">{error}</div>}
+
+        <button 
+          onClick={handleLogin} 
+          disabled={loading}
+          className="login-btn"
+        >
+          {loading ? 'Connecting...' : 'Connect to Salesforce'}
+        </button>
+
+        <div className="auth-features">
+          <h3>Features</h3>
+          <ul>
+            <li>OAuth 2.0 Secure Authentication</li>
+            <li>Metadata Comparison & Deployment</li>
+            <li>Automated Backups</li>
+            <li>Multi-Org Support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default AuthPage;

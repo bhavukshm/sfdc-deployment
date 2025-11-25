@@ -1,0 +1,59 @@
+.App {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.main-content {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #0176d3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #014486;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+    color: #c23934;
+    padding: 10px;
+    background-color: #fee;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.success {
+    color: #2e844a;
+    padding: 10px;
+    background-color: #efe;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
