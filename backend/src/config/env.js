@@ -2,6 +2,7 @@
  * Environment Configuration
  * Centralizes all environment variable access with validation
  */
+require('dotenv').config();
 
 const required = (key) => {
   const value = process.env[key];

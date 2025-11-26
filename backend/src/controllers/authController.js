@@ -33,6 +33,9 @@ class AuthController {
       const { code, state } = req.query;
 
       if (!code) {
+        if (req.query.error) {
+          return res.status(400).json({ error: req.query.error, description: req.query.error_description });
+        }
         return res.status(400).json({ error: 'Authorization code missing' });
       }
 

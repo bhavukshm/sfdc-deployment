@@ -15,6 +15,17 @@ const axios = require('axios');
 const config = require('../../config/env');
 const SF_CONFIG = require('../../config/salesforce');
 const { logger } = require('../../utils/logger');
+const crypto = require("crypto");
+
+function generatePKCE() {
+  const code_verifier = crypto.randomBytes(32).toString("base64url");
+  const code_challenge = crypto
+    .createHash("sha256")
+    .update(code_verifier)
+    .digest("base64url");
+
+  return { code_verifier, code_challenge };
+}
 
 class OAuthService {
   /**
@@ -23,13 +34,17 @@ class OAuthService {
    * @returns {string} Authorization URL
    */
   static getAuthorizationUrl(state = null) {
+    const { code_verifier, code_challenge } = generatePKCE();
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: config.salesforce.clientId,
       redirect_uri: config.salesforce.callbackUrl,
-      scope: config.salesforce.scopes.join(' ')
+      scope: config.salesforce.scopes.join(' '),
+      code_challenge_method: 'S256',
+      code_challenge: code_challenge
     });
 
+    config.salesforce.code_verifier = code_verifier
     if (state) {
       params.append('state', state);
     }
@@ -51,7 +66,8 @@ class OAuthService {
         code: code,
         client_id: config.salesforce.clientId,
         client_secret: config.salesforce.clientSecret,
-        redirect_uri: config.salesforce.callbackUrl
+        redirect_uri: config.salesforce.callbackUrl,
+        code_verifier: config.salesforce.code_verifier
       });
 
       const response = await axios.post(SF_CONFIG.oauth.tokenUrl, params, {
