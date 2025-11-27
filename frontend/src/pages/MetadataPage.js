@@ -17,7 +17,6 @@ function MetadataPage() {
         metadataRequested.current = true;
         const result = await metadataService.describeMetadata(getAuthHeaders());
         setMetadata(result);
-        metadataRequested.current = true;
       }
     } catch (error) {
       console.error('Describe failed:', error);
@@ -53,12 +52,18 @@ function MetadataPage() {
 
       <div className="card">
         <h3>List Metadata by Type</h3>
-        <input
-          type="text"
-          placeholder="Enter metadata type (e.g., ApexClass)"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-        />
+        <div className="org-selector">
+          <select
+            onChange={(e) => setSelectedType(e.target.value)}
+          >
+            <option value="">--Select Metadata Type--</option>
+            {metadata?.metadataObjects.map((metadataObject) => {
+              return (<option key={metadataObject.xmlName} value={metadataObject.xmlName}>
+                {metadataObject.xmlName}
+              </option>)
+            })}
+          </select>
+        </div>
         <button onClick={handleListMetadata} disabled={loading || !selectedType}>
           List Metadata
         </button>
