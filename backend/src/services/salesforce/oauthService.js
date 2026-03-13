@@ -29,6 +29,7 @@ function generatePKCE() {
 
 class OAuthService {
   /**
+   * Web Server Flow 1
    * Generate authorization URL for user to login
    * @param {string} state - CSRF protection state parameter
    * @returns {string} Authorization URL
@@ -70,6 +71,7 @@ class OAuthService {
         code_verifier: config.salesforce.code_verifier
       });
 
+      // Web Server Flow 2 Request
       const response = await axios.post(SF_CONFIG.oauth.tokenUrl, params, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });

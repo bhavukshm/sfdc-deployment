@@ -19,6 +19,8 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<AuthPage />} />
+
+              {/* User will be redirected here after successful authentication automatically */}
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/metadata" element={<MetadataPage />} />
               <Route path="/compare" element={<ComparePage />} />

@@ -8,6 +8,7 @@ function MetadataPage() {
   const [loading, setLoading] = useState(false);
   const [metadata, setMetadata] = useState(null);
   const [selectedType, setSelectedType] = useState('');
+  const [fetchedData, setFetchedData] = useState(null);
   const metadataRequested = useRef(false);
 
   const handleDescribe = async () => {
@@ -35,7 +36,7 @@ function MetadataPage() {
     setLoading(true);
     try {
       const result = await metadataService.listMetadata(selectedType, null, getAuthHeaders());
-      console.log('Metadata list:', result);
+      setFetchedData(result);
     } catch (error) {
       console.error('List metadata failed:', error);
     } finally {
@@ -57,17 +58,18 @@ function MetadataPage() {
             onChange={(e) => setSelectedType(e.target.value)}
           >
             <option value="">--Select Metadata Type--</option>
-            {metadata?.metadataObjects.map((metadataObject) => {
-              return (<option key={metadataObject.xmlName} value={metadataObject.xmlName}>
-                {metadataObject.xmlName}
-              </option>)
-            })}
           </select>
         </div>
         <button onClick={handleListMetadata} disabled={loading || !selectedType}>
           List Metadata
         </button>
       </div>
+
+      {fetchedData && <div className="card">
+        {fetchedData.map(element => {
+          return <p>{element.fullName}</p>
+        })}
+      </div>}
     </div>
   );
 }
